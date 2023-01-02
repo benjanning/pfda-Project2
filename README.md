@@ -6,7 +6,7 @@ In this project I will be exploring the Wisconsin Breast Cancer Dataset.
 
 The exploration will include:
 
-1) Undertaking an analysis/review of the dataset and present an overview and background.
+1) Undertaking an analysis/review of the dataset and presenting an overview and background.
 2) Providing a literature review on classifiers which have been applied to the Dataset and comparing their performance.
 3) Presenting a statistical analysis of the dataset.
 4) Using a range of machine learning algorithms, training a set of classifiers on the dataset and presenting classification performance results.
