@@ -165,4 +165,8 @@ Ben Janning - g00411362@atu.ie
 </details>
 
 ---
-[View my public project portfolio](https://github.com/benjanning/programming2022).
+[View my public project portfolio](https://benjanning.github.io/projects/).
+
+## Reproducibility corrections (October 2026)
+
+The notebook executed all 42 code cells using the supplied dataset. Corrected case-sensitive data loading, deprecated NumPy boolean aliases, test-scaler refitting and cross-validation preprocessing. Tree estimators now use fixed seeds. Outputs were regenerated; historical narrative numbers may differ. Feature selection remains exploratory and a single-dataset comparison is not external or clinical validation. Install requirements.txt before running from the repository root.
