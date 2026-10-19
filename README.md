@@ -1,4 +1,44 @@
-# Project 2 for the Programming for Data Analysis Module
+# Breast Cancer Dataset — Classification & Model Comparison
+
+**Python · Machine Learning · scikit-learn · Data Visualisation**
+
+An academic machine-learning project investigating the Wisconsin Breast Cancer dataset, comparing classification methods and discussing their strengths and limitations.
+
+## Project overview
+
+**Objective:** Explore whether statistical patterns in a publicly available dataset can be used to distinguish between diagnostic classes, and compare the behaviour of different supervised classifiers.
+
+**What the notebook covers:**
+- Dataset background, attributes and relevant research.
+- Data exploration and statistical analysis.
+- Training and comparing classification models.
+- Reviewing results against published approaches.
+- Investigating synthetic data generation as a possible extension.
+- Discussing interpretation and limitations.
+
+## Explore the project
+
+- **[Full analysis notebook](./PFDA%20Project%202.ipynb)** — the implementation, charts and written investigation.
+- **[Supporting data](./Data)** — data used in the assessment.
+- **[Generated visual](./h.png)** — output image from the coursework.
+
+## Technology
+
+Python, pandas, NumPy, Matplotlib, Seaborn and scikit-learn.
+
+## Run or review
+
+GitHub renders the saved notebook for reading. To reproduce it, open the notebook in Jupyter or VS Code, install the packages imported in the cells, and run it with the included supporting files in their existing paths. Results may vary with library versions and random splits.
+
+> **Scope:** This is a historical educational analysis of a public dataset. It is **not** a medical diagnostic tool, a clinically validated model or a production service.
+
+## Background and academic sources
+
+The notebook contains the full investigation and discussion. The original coursework references are also retained below.
+
+<details>
+<summary>Original project documentation and references</summary>
+
 
 ## Introduction:
 
@@ -121,3 +161,8 @@ Ben Janning - g00411362@atu.ie
 [40] Breast Cancer Diagnosis Using a Hybrid Approach of K-nearest Neighbor and Naive Bayes. https://www.springer.com/journal/10916/. Journal of Medical Systems. Volume 34, issue 5, Pages 899-906.
 
 [41] Deep Learning with Convolutional Neural Networks for EEG Decoding and Visualization. https://pubmed.ncbi.nlm.nih.gov/28782865/
+
+</details>
+
+---
+[View my public project portfolio](https://github.com/benjanning/programming2022).
