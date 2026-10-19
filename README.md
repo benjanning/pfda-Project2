@@ -24,6 +24,7 @@ Investigated the Wisconsin Breast Cancer dataset in a Python notebook, using exp
 ```bash
 python -m pip install -r requirements.txt
 python evaluate.py
+python plot_evaluation.py
 ```
 Open `PFDA Project 2.ipynb` with your Jupyter interface for the original investigation. The requirements include an IPython kernel; install a notebook interface separately if needed.
 
