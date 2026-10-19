@@ -1,0 +1,16 @@
+{
+  "seed": 40,
+  "features": 30,
+  "training_rows": 398,
+  "holdout_rows": 171,
+  "training_classes": {
+    "0": 250,
+    "1": 148
+  },
+  "holdout_classes": {
+    "0": 107,
+    "1": 64
+  },
+  "folds": 5,
+  "note": "Exploratory single-dataset comparison; holdout reuse across models is not an unbiased model-selection estimate. No independent or clinical validation."
+}
