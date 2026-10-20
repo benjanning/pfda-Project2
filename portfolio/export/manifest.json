@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "source_repository": "benjanning/pfda-Project2",
+  "source_revision": "e8240c77b22622690ff3190e04a2330a72ac1ffb",
+  "verification_run": 39428021220,
+  "project": {
+    "slug": "machine-learning",
+    "title": "Breast cancer classification",
+    "category": "Machine learning",
+    "repo": "pfda-Project2",
+    "stack": [
+      "Python",
+      "pandas",
+      "scikit-learn",
+      "Seaborn"
+    ],
+    "image": "comparison.png",
+    "alt": "Measured classifier comparison with training-fold variability and explicit false-negative counts",
+    "desc": "Compare three classifiers, inspect their mistakes and understand the limits of a single public dataset.",
+    "built": "Refined the original educational investigation into an auditable comparison, with saved predictions, confusion matrices and a reproducible evaluation trail.",
+    "why": "A useful model starts with understanding the data and evaluating it carefully. This investigation shows the steps between a dataset and an interpretable comparison.",
+    "how": [
+      "Inspect the 569 source observations and retain all 30 numeric features, excluding identifiers and labels.",
+      "Use a deterministic stratified training/holdout split, with preprocessing fitted inside training-only cross-validation.",
+      "Compare errors on the same reused holdout, reconcile saved predictions with metrics and reproduce the figures."
+    ],
+    "demonstrates": "Exploratory analysis, supervised learning, preprocessing, classifier comparison and critical interpretation of results.",
+    "caption": "A reproducible three-model comparison using all 30 source features. Green bars show training-only cross-validation; brown points show the reused exploratory holdout.",
+    "result": "All 30 features; 398 training examples; 171 examples in a repeatedly reused exploratory holdout. False negatives among 64 malignant-labelled holdout examples: Logistic regression 7, Decision tree 10, Random forest 6. Training-only five-fold cross-validation keeps preprocessing inside each fold. Saved predictions reconcile with the metrics and confusion matrices; repeated runs reproduce the same result files. No independent or clinical validation.",
+    "limits": "This is educational analysis of a public teaching dataset, not a diagnostic system. The holdout has been reused across models and portfolio iterations, so it is exploratory rather than an untouched final test. No independent cohort, clinical validation, calibration study or causal interpretation is claimed. False negatives are shown explicitly.",
+    "technical": "Seed 40; stratified 70/30 split; five stratified training-only CV folds; all 30 features. Logistic regression uses a StandardScaler pipeline; decision tree and random forest use fixed seeds. Saved prediction rows, labelled confusion counts, feature names, partition indices, dependency versions and dataset SHA-256 make the measured outputs auditable. Regression tests reconcile metrics and matrices and reproduce output files byte-for-byte.",
+    "run": "Install requirements.txt, run python evaluate.py, python -m unittest discover -p \"test_*.py\" -v and python plot_portfolio.py. The original notebook remains available separately.",
+    "extra": "",
+    "gallery": [
+      [
+        "confusion.png",
+        "The same held-out examples and labelled false-negative counts for all three models."
+      ],
+      [
+        "features.png",
+        "Descriptive feature distributions and source class counts; these are not independent performance evidence."
+      ]
+    ]
+  },
+  "assets": [
+    {
+      "name": "comparison.png",
+      "sha256": "030226df541eb82dddc0e459c24ad90ff1eb7a3d771f780f5463d51dafea5e24",
+      "bytes": 86419,
+      "provenance": "Measured balanced accuracy from saved model-comparison.csv. Training fold SD is not a confidence interval. Reused holdout is exploratory."
+    },
+    {
+      "name": "confusion.png",
+      "sha256": "cea151ba1e7ab93010581e162b96ed07c7e2c795209030f6de01ed6bdb7db6e8",
+      "bytes": 134975,
+      "provenance": "Genuine confusion counts reconstructed from saved predictions for the same 171 held-out examples; lower-left cells show false negatives."
+    },
+    {
+      "name": "features.png",
+      "sha256": "199c6190b817af482e6acec1fa8e8b989a9a521462dc1c925a90ff742e521879",
+      "bytes": 97795,
+      "provenance": "Descriptive histograms from the complete public Wisconsin dataset. Shared bins; no feature selection or clinical claim."
+    }
+  ]
+}
