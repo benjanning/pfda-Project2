@@ -1,0 +1,50 @@
+{
+  "Logistic regression": {
+    "labels": [
+      "Benign (0)",
+      "Malignant (1)"
+    ],
+    "counts": [
+      [
+        104,
+        3
+      ],
+      [
+        7,
+        57
+      ]
+    ]
+  },
+  "Decision tree": {
+    "labels": [
+      "Benign (0)",
+      "Malignant (1)"
+    ],
+    "counts": [
+      [
+        102,
+        5
+      ],
+      [
+        10,
+        54
+      ]
+    ]
+  },
+  "Random forest": {
+    "labels": [
+      "Benign (0)",
+      "Malignant (1)"
+    ],
+    "counts": [
+      [
+        103,
+        4
+      ],
+      [
+        6,
+        58
+      ]
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "project": {
+    "slug": "machine-learning",
+    "title": "Breast cancer classification",
+    "category": "Machine learning",
+    "repo": "pfda-Project2",
+    "stack": [
+      "Python",
+      "pandas",
+      "scikit-learn",
+      "Seaborn"
+    ],
+    "image": "comparison.png",
+    "alt": "Measured classifier comparison with training-fold variability and explicit false-negative counts",
+    "desc": "Compare three classifiers, inspect their mistakes and understand the limits of a single public dataset.",
+    "built": "Refined the original educational investigation into an auditable comparison, with saved predictions, confusion matrices and a reproducible evaluation trail.",
+    "why": "A useful model starts with understanding the data and evaluating it carefully. This investigation shows the steps between a dataset and an interpretable comparison.",
+    "how": [
+      "Inspect the 569 source observations and retain all 30 numeric features, excluding identifiers and labels.",
+      "Use a deterministic stratified training/holdout split, with preprocessing fitted inside training-only cross-validation.",
+      "Compare errors on the same reused holdout, reconcile saved predictions with metrics and reproduce the figures."
+    ],
+    "demonstrates": "Exploratory analysis, supervised learning, preprocessing, classifier comparison and critical interpretation of results.",
+    "caption": "A reproducible three-model comparison using all 30 source features. Green bars show training-only cross-validation; brown points show the reused exploratory holdout.",
+    "result": "Measured results are generated from the same source run as the figures.",
+    "limits": "This is educational analysis of a public teaching dataset, not a diagnostic system. The holdout has been reused across models and portfolio iterations, so it is exploratory rather than an untouched final test. No independent cohort, clinical validation, calibration study or causal interpretation is claimed. False negatives are shown explicitly.",
+    "technical": "Seed 40; stratified 70/30 split; five stratified training-only CV folds; all 30 features. Logistic regression uses a StandardScaler pipeline; decision tree and random forest use fixed seeds. Saved prediction rows, labelled confusion counts, feature names, partition indices, dependency versions and dataset SHA-256 make the measured outputs auditable. Regression tests reconcile metrics and matrices and reproduce output files byte-for-byte.",
+    "run": "Install requirements.txt, run python evaluate.py, python -m unittest discover -p \"test_*.py\" -v and python plot_portfolio.py. The original notebook remains available separately.",
+    "extra": "",
+    "gallery": [
+      [
+        "confusion.png",
+        "The same held-out examples and labelled false-negative counts for all three models."
+      ],
+      [
+        "features.png",
+        "Descriptive feature distributions and source class counts; these are not independent performance evidence."
+      ]
+    ]
+  },
+  "assets": [
+    {
+      "name": "comparison.png",
+      "path": "results/model-comparison.png",
+      "provenance": "Measured balanced accuracy from saved model-comparison.csv. Training fold SD is not a confidence interval. Reused holdout is exploratory."
+    },
+    {
+      "name": "confusion.png",
+      "path": "results/confusion-matrices.png",
+      "provenance": "Genuine confusion counts reconstructed from saved predictions for the same 171 held-out examples; lower-left cells show false negatives."
+    },
+    {
+      "name": "features.png",
+      "path": "results/feature-distributions.png",
+      "provenance": "Descriptive histograms from the complete public Wisconsin dataset. Shared bins; no feature selection or clinical claim."
+    }
+  ],
+  "result_path": "results/portfolio-summary.txt"
+}
