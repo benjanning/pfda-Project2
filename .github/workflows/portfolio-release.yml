@@ -13,6 +13,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write
     steps:
@@ -27,6 +28,23 @@ jobs:
       - run: python evaluate.py
       - run: python -m unittest discover -p 'test_*.py' -v
       - run: python plot_portfolio.py
+      - run: python build_explorer.py
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - name: Keep genuine browser evidence for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: classification-browser-evidence
+          path: verification/
+          retention-days: 14
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: docs
       - name: Export verified metadata and genuine visuals
         if: github.event_name != 'pull_request'
         run: python scripts/export_portfolio.py
@@ -49,3 +67,16 @@ jobs:
             git commit -m "Publish verified portfolio evidence for $GITHUB_SHA"
             git push origin HEAD:portfolio-published
           fi
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

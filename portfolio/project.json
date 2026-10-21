@@ -11,33 +11,39 @@
       "scikit-learn",
       "Seaborn"
     ],
-    "image": "comparison.png",
-    "alt": "Measured classifier comparison with training-fold variability and explicit false-negative counts",
-    "desc": "Compare three classifiers, inspect their mistakes and understand the limits of a single public dataset.",
-    "built": "Refined the original educational investigation into an auditable comparison, with saved predictions, confusion matrices and a reproducible evaluation trail.",
-    "why": "A useful model starts with understanding the data and evaluating it carefully. This investigation shows the steps between a dataset and an interpretable comparison.",
+    "image": "explorer.jpg",
+    "alt": "Genuine saved-results explorer showing logistic-regression confusion counts, malignant precision and recall, and a training-majority baseline",
+    "desc": "Explore saved classifier errors, compare a training-majority baseline and see why accuracy alone can mislead.",
+    "built": "Turned the reproducible three-model evaluation into an auditable, read-only results lab. Every confusion count and score comes from saved predictions, with a baseline selected only from training labels.",
+    "why": "A high accuracy can hide systematically missed examples when classes are imbalanced. The project makes error types, denominators and evaluation limits visible before interpreting a model comparison.",
     "how": [
-      "Inspect the 569 source observations and retain all 30 numeric features, excluding identifiers and labels.",
-      "Use a deterministic stratified training/holdout split, with preprocessing fitted inside training-only cross-validation.",
-      "Compare errors on the same reused holdout, reconcile saved predictions with metrics and reproduce the figures."
+      "Reproduce the existing fixed three-model evaluation with all 30 features and preprocessing inside training-only cross-validation.",
+      "Reconcile saved predictions with source rows, confusion matrices and scores; compute a majority baseline using training labels only.",
+      "Choose a saved classifier to explore its errors, malignant precision/recall/F1 and balanced accuracy; controls read results without retraining."
     ],
-    "demonstrates": "Exploratory analysis, supervised learning, preprocessing, classifier comparison and critical interpretation of results.",
-    "caption": "A reproducible three-model comparison using all 30 source features. Green bars show training-only cross-validation; brown points show the reused exploratory holdout.",
+    "demonstrates": "Reproducible machine learning, class-imbalance analysis, precise metric interpretation, data-integrity checks and accessible frontend development.",
+    "caption": "Actual browser capture of the saved-results lab after desktop and mobile checks. The controls select previously computed outputs; they do not train a model.",
     "result": "Measured results are generated from the same source run as the figures.",
-    "limits": "This is educational analysis of a public teaching dataset, not a diagnostic system. The holdout has been reused across models and portfolio iterations, so it is exploratory rather than an untouched final test. No independent cohort, clinical validation, calibration study or causal interpretation is claimed. False negatives are shown explicitly.",
-    "technical": "Seed 40; stratified 70/30 split; five stratified training-only CV folds; all 30 features. Logistic regression uses a StandardScaler pipeline; decision tree and random forest use fixed seeds. Saved prediction rows, labelled confusion counts, feature names, partition indices, dependency versions and dataset SHA-256 make the measured outputs auditable. Regression tests reconcile metrics and matrices and reproduce output files byte-for-byte.",
-    "run": "Install requirements.txt, run python evaluate.py, python -m unittest discover -p \"test_*.py\" -v and python plot_portfolio.py. The original notebook remains available separately.",
+    "limits": "Educational analysis of a public teaching dataset, not a diagnostic system. This browser reads saved results only; it accepts no patient inputs and trains no models. The holdout has been reused across models and portfolio iterations, so it is exploratory rather than an untouched final test or an unbiased selection estimate. The baseline is context, not a new tuned classifier. No independent cohort, clinical validation, calibration study or causal feature interpretation is claimed.",
+    "technical": "A Python export independently reconciles source hashes, fixed partitions, saved prediction labels, confusion counts and metrics before generating the explorer JSON. A training-majority baseline uses 250 benign and 148 malignant training labels. Malignant precision is explicitly undefined when a model predicts no positives; F1 is zero when it misses every positive. The existing evaluation, training-only five-fold CV and figure generation remain unchanged. Browser tests check all four approaches at desktop/mobile widths, keyboard selection, exact rendered values and loading failure.",
+    "run": "Install requirements.txt, run python evaluate.py, python -m unittest discover -p \"test_*.py\" -v, python plot_portfolio.py and python build_explorer.py. Serve docs/ with a local static server. npm ci and npm run test:browser run repeatable desktop/mobile checks. The original notebook remains separate.",
     "extra": "",
     "gallery": [
       [
-        "confusion.png",
-        "The same held-out examples and labelled false-negative counts for all three models."
+        "baseline.jpg",
+        "A baseline chosen from training labels reaches 62.6% holdout accuracy while missing all 64 malignant-labelled examples."
       ],
       [
-        "features.png",
-        "Descriptive feature distributions and source class counts; these are not independent performance evidence."
+        "comparison.png",
+        "Existing training-only CV and exploratory holdout results; fold SD is not a confidence interval."
+      ],
+      [
+        "confusion.png",
+        "All three original saved confusion matrices on the same 171 reused holdout examples."
       ]
-    ]
+    ],
+    "challenge": "Accuracy rewards majority guessing on an imbalanced dataset. The useful challenge is to explain which examples were missed and what each denominator means, without turning a reused exploratory holdout into a model-selection claim. The exporter cross-checks independent saved artifacts and carries their hashes into a browser that cannot train, tune or accept patient inputs.",
+    "demo": "https://benjanning.github.io/pfda-Project2/"
   },
   "assets": [
     {
@@ -54,7 +60,22 @@
       "name": "features.png",
       "path": "results/feature-distributions.png",
       "provenance": "Descriptive histograms from the complete public Wisconsin dataset. Shared bins; no feature selection or clinical claim."
+    },
+    {
+      "name": "explorer.jpg",
+      "path": "verification/screenshots/explorer.jpg",
+      "provenance": "Genuine browser capture of the read-only results explorer after exact confusion-count/metric checks for all three saved models and the training-majority baseline. Uses exported source-validated predictions; no patient inputs, runtime training or clinical validation."
+    },
+    {
+      "name": "baseline.jpg",
+      "path": "verification/screenshots/baseline.jpg",
+      "provenance": "Genuine browser capture of the read-only results explorer after exact confusion-count/metric checks for all three saved models and the training-majority baseline. Uses exported source-validated predictions; no patient inputs, runtime training or clinical validation."
+    },
+    {
+      "name": "mobile-explorer.jpg",
+      "path": "verification/screenshots/explorer-390.jpg",
+      "provenance": "Genuine browser capture of the read-only results explorer after exact confusion-count/metric checks for all three saved models and the training-majority baseline. Uses exported source-validated predictions; no patient inputs, runtime training or clinical validation."
     }
   ],
-  "result_path": "results/portfolio-summary.txt"
+  "result_path": "results/explorer-summary.txt"
 }
