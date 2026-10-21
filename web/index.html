@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Classification results lab | Ben Janning</title>
+    <meta
+      name="description"
+      content="Explore genuine saved classifier results, confusion counts and the limits of a reused teaching dataset."
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to results</a>
+    <header>
+      <a href="https://benjanning.github.io/projects/"
+        >BEN JANNING / DATA &amp; SOFTWARE</a
+      ><span>Saved results · Educational analysis</span>
+    </header>
+    <main id="main">
+      <section class="intro">
+        <p class="eyebrow">01 / LOOK BEYOND ACCURACY</p>
+        <h1>Good scores.<br /><em>Different mistakes.</em></h1>
+        <p class="lede">
+          Explore what three classifiers got right—and what they missed—on the
+          same 171 examples. Compare them with a simple training-majority
+          baseline.
+        </p>
+        <p class="notice">
+          Public teaching data. No patient inputs or predictions. This is not a
+          diagnostic tool, and the repeatedly reused holdout is not independent
+          validation.
+        </p>
+      </section>
+      <div id="failure" role="alert" hidden>
+        Results could not be loaded. Please reload or inspect the saved results
+        in the source repository.
+      </div>
+      <div id="results" hidden>
+        <section class="context" aria-label="Evaluation context">
+          <div><strong>398</strong><span>training examples</span></div>
+          <div><strong>171</strong><span>reused holdout examples</span></div>
+          <div>
+            <strong>107 / 64</strong
+            ><span>benign / malignant holdout labels</span>
+          </div>
+        </section>
+        <section class="selection">
+          <div>
+            <p class="eyebrow">02 / INSPECT A SAVED RESULT</p>
+            <h2>Keep the errors in view.</h2>
+          </div>
+          <div>
+            <label for="model">Classifier or baseline</label
+            ><select id="model"></select>
+            <p class="fine">
+              Changing this control reads saved results. It never trains a
+              model.
+            </p>
+          </div>
+        </section>
+        <div
+          id="selection-status"
+          class="sr-only"
+          role="status"
+          aria-live="polite"
+        ></div>
+        <section class="analysis" aria-label="Selected classifier results">
+          <div class="matrix-panel">
+            <h3 id="selected-title"></h3>
+            <p>Rows are actual labels. Columns are predicted labels.</p>
+            <table class="matrix">
+              <caption>
+                Confusion matrix ·
+                <span id="matrix-caption"></span>
+              </caption>
+              <thead>
+                <tr>
+                  <td></td>
+                  <th scope="col">Predicted<br />benign</th>
+                  <th scope="col">Predicted<br />malignant</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Actual<br />benign</th>
+                  <td class="correct">
+                    <strong id="tn"></strong><span>True negatives</span>
+                  </td>
+                  <td><strong id="fp"></strong><span>False positives</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Actual<br />malignant</th>
+                  <td class="missed">
+                    <strong id="fn"></strong><span>False negatives</span>
+                  </td>
+                  <td class="correct">
+                    <strong id="tp"></strong><span>True positives</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p id="error-story" class="story"></p>
+          </div>
+          <div>
+            <h3>How to read the scores</h3>
+            <div class="metrics" id="metrics"></div>
+            <p id="cv" class="fine"></p>
+          </div>
+        </section>
+        <section class="comparison">
+          <p class="eyebrow">03 / SAME EXAMPLES, ALL FOUR APPROACHES</p>
+          <h2>A baseline makes imbalance visible.</h2>
+          <p id="baseline-story"></p>
+          <div
+            class="table-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Model comparison table, scroll horizontally on small screens"
+          >
+            <table>
+              <caption>
+                Saved exploratory holdout results; malignant is the positive
+                label.
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Approach</th>
+                  <th scope="col">Accuracy</th>
+                  <th scope="col">Balanced accuracy</th>
+                  <th scope="col">Precision</th>
+                  <th scope="col">Recall</th>
+                  <th scope="col">F1</th>
+                  <th scope="col">Missed / 64</th>
+                </tr>
+              </thead>
+              <tbody id="comparison"></tbody>
+            </table>
+          </div>
+          <p class="fine">
+            Balanced accuracy gives the two actual classes equal weight. N/A
+            precision means no malignant predictions were made. F1 is zero for
+            this baseline because all malignant examples were missed.
+          </p>
+        </section>
+        <section class="limits">
+          <p class="eyebrow">04 / EVIDENCE WITH CONTEXT</p>
+          <h2>Useful comparison. Limited conclusions.</h2>
+          <p>
+            All 30 features are retained. Seed 40 fixes the stratified split.
+            Logistic regression scales features inside each training fold; the
+            tree and forest use fixed seeds. Five-fold cross-validation uses
+            training data only.
+          </p>
+          <p>
+            These models and portfolio iterations have repeatedly reused the
+            same holdout. The figures are exploratory, not an unbiased ranking
+            or evidence of real-world clinical performance. There is no
+            independent cohort, calibration study or clinical validation.
+          </p>
+          <p>
+            The baseline predicts the majority class in the
+            <strong>training labels</strong>, without consulting holdout
+            performance. Model controls do not tune thresholds, select features
+            or retrain.
+          </p>
+          <p id="receipt" class="fine"></p>
+          <p>
+            <a href="data.json">Inspect exported results JSON ↗</a> ·
+            <a
+              href="https://github.com/benjanning/pfda-Project2/tree/main/results"
+              >Saved predictions and methods ↗</a
+            >
+          </p>
+        </section>
+      </div>
+      <noscript
+        >This results explorer needs JavaScript. All numerical results and
+        methods are also available in the source repository.</noscript
+      >
+    </main>
+    <footer>
+      <a href="https://benjanning.github.io/projects/projects/machine-learning/"
+        >Read the case study ↗</a
+      ><a href="https://github.com/benjanning/pfda-Project2"
+        >Explore the source ↗</a
+      ><span
+        >Wisconsin Diagnostic teaching dataset · No diagnostic service</span
+      >
+    </footer>
+  </body>
+</html>
