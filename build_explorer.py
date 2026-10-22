@@ -88,8 +88,42 @@ def make_report(root=ROOT):
                 fold_sd=float(saved["cv_fold_sd"]),
             )
         models.append(dict(name=name, counts=counts, metrics=scores, cv=cv))
+    # Source row positions only: no original identifiers or feature measurements.
+    observations = [
+        dict(
+            row_index=int(row["row_index"]),
+            actual=int(row["actual"]),
+            predictions={
+                model["name"]: int(row[model["name"]]) if model["cv"] else majority
+                for model in models
+            },
+        )
+        for row in predictions
+    ]
+    pairs = []
+    for a in models:
+        for b in models:
+            groups = dict(
+                both_wrong=[], only_a_wrong=[], only_b_wrong=[], both_correct=[]
+            )
+            for row in observations:
+                wrong_a = row["predictions"][a["name"]] != row["actual"]
+                wrong_b = row["predictions"][b["name"]] != row["actual"]
+                group = (
+                    "both_wrong"
+                    if wrong_a and wrong_b
+                    else (
+                        "only_a_wrong"
+                        if wrong_a
+                        else "only_b_wrong" if wrong_b else "both_correct"
+                    )
+                )
+                groups[group].append(row["row_index"])
+            pairs.append(dict(a=a["name"], b=b["name"], groups=groups))
     return dict(
         schema_version=1,
+        observations=observations,
+        pairs=pairs,
         source_revision=subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=root, text=True
         ).strip(),
@@ -124,5 +158,19 @@ if __name__ == "__main__":
         for model in report["models"][:-1]
     )
     summary = f'Saved predictions from the unchanged three-model evaluation reconcile with source labels and confusion counts. {errors}. The training-majority baseline scores {baseline["metrics"]["accuracy"]:.1%} accuracy but misses {baseline["counts"][1][0]} of {report["holdout_classes"]["1"]} malignant-labelled holdout examples. The explorer reports positive-class precision/recall/F1 and balanced accuracy without retraining. This repeatedly reused holdout is exploratory, with no independent or clinical validation.'
+    paired = next(
+        pair
+        for pair in report["pairs"]
+        if pair["a"] == "Logistic regression" and pair["b"] == "Random forest"
+    )["groups"]
+    summary += (
+        f" Logistic regression and random forest each make "
+        f'{len(paired["both_wrong"]) + len(paired["only_a_wrong"])} and '
+        f'{len(paired["both_wrong"]) + len(paired["only_b_wrong"])} saved errors respectively: '
+        f'{len(paired["both_wrong"])} shared errors, '
+        f'{len(paired["only_a_wrong"])} logistic-only errors and '
+        f'{len(paired["only_b_wrong"])} forest-only errors. '
+        "Paired counts describe these same rows; they are not a significance test or a new performance estimate."
+    )
     (ROOT / "results/explorer-summary.txt").write_text(summary + "\n", encoding="utf8")
     print("Built saved-results explorer: four models, no runtime training.")

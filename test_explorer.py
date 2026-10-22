@@ -72,6 +72,68 @@ class ExplorerTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 metrics(counts)
 
+    def test_every_paired_partition_matches_independent_source_masks(self):
+        report = make_report()
+        saved = pd.read_csv(ROOT / "results/holdout-predictions.csv")
+        saved["Training-majority baseline"] = report["baseline_label"]
+        self.assertEqual(len(report["pairs"]), 16)
+        for pair in report["pairs"]:
+            a = saved[pair["a"]].ne(saved.actual)
+            b = saved[pair["b"]].ne(saved.actual)
+            expected = {
+                "both_wrong": saved.loc[a & b, "row_index"].tolist(),
+                "only_a_wrong": saved.loc[a & ~b, "row_index"].tolist(),
+                "only_b_wrong": saved.loc[~a & b, "row_index"].tolist(),
+                "both_correct": saved.loc[~a & ~b, "row_index"].tolist(),
+            }
+            self.assertEqual(pair["groups"], expected)
+            all_rows = [row for group in pair["groups"].values() for row in group]
+            self.assertEqual(len(all_rows), 171)
+            self.assertEqual(set(all_rows), set(saved.row_index))
+            self.assertEqual(
+                len(expected["both_wrong"]) + len(expected["only_a_wrong"]),
+                int(a.sum()),
+            )
+            self.assertEqual(
+                len(expected["both_wrong"]) + len(expected["only_b_wrong"]),
+                int(b.sum()),
+            )
+            reverse = next(
+                p
+                for p in report["pairs"]
+                if p["a"] == pair["b"] and p["b"] == pair["a"]
+            )
+            self.assertEqual(
+                expected["only_a_wrong"], reverse["groups"]["only_b_wrong"]
+            )
+            if pair["a"] == pair["b"]:
+                self.assertEqual(expected["only_a_wrong"], [])
+                self.assertEqual(expected["only_b_wrong"], [])
+
+    def test_anonymous_paired_rows_reconcile_and_source_outputs_remain_unchanged(self):
+        files = [
+            ROOT / "results" / name
+            for name in [
+                "holdout-predictions.csv",
+                "methodology.json",
+                "confusion-matrices.json",
+                "model-comparison.csv",
+            ]
+        ]
+        before = [path.read_bytes() for path in files]
+        report = make_report()
+        saved = pd.read_csv(files[0])
+        for row, source in zip(report["observations"], saved.to_dict(orient="records")):
+            self.assertEqual(set(row), {"row_index", "actual", "predictions"})
+            self.assertEqual(row["row_index"], source["row_index"])
+            self.assertEqual(row["actual"], source["actual"])
+            for model in report["models"]:
+                self.assertEqual(
+                    row["predictions"][model["name"]],
+                    source[model["name"]] if model["cv"] else report["baseline_label"],
+                )
+        self.assertEqual(before, [path.read_bytes() for path in files])
+
     def test_source_mismatch_fails_before_export(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

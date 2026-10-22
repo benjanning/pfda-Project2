@@ -9,3 +9,7 @@ results/model-comparison.png and confusion-matrices.png are generated from saved
 ## V4 saved-results lab
 
 The explorer, baseline and mobile images are genuine automated browser captures of the generated static application. Source/prediction hashes, exact partitions and confusion counts are checked before export. The baseline uses training labels only. Controls read saved evaluation results; they perform no training or patient prediction. Original measured figures and their attribution remain intact.
+
+## V5 paired errors
+
+paired-errors.jpg and paired-mobile.jpg are genuine browser captures after all sixteen approach pairs and four evidence groups reconcile with the saved prediction CSV. Default A is logistic regression and B is random forest: four shared errors, six unique errors each and 155 both correct on the same 171 rows. Visible source positions are anonymous row indices, not identifiers. No new model is trained, and no screenshot or statistic is fabricated.
