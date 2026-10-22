@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "source_repository": "benjanning/pfda-Project2",
-  "source_revision": "0ecd0b99d3d3bcb6cb4dc93835a48ba9d8bb6fa3",
-  "verification_run": 39582331653,
+  "source_revision": "3cf53af3e9013383698cbd71b04d1e7ed1c12ab6",
+  "verification_run": 39788278296,
   "project": {
     "slug": "machine-learning",
     "title": "Breast cancer classification",
@@ -14,38 +14,38 @@
       "scikit-learn",
       "Seaborn"
     ],
-    "image": "explorer.jpg",
-    "alt": "Genuine saved-results explorer showing logistic-regression confusion counts, malignant precision and recall, and a training-majority baseline",
-    "desc": "Explore saved classifier errors, compare a training-majority baseline and see why accuracy alone can mislead.",
-    "built": "Turned the reproducible three-model evaluation into an auditable, read-only results lab. Every confusion count and score comes from saved predictions, with a baseline selected only from training labels.",
-    "why": "A high accuracy can hide systematically missed examples when classes are imbalanced. The project makes error types, denominators and evaluation limits visible before interpreting a model comparison.",
+    "image": "paired-errors.jpg",
+    "alt": "Actual saved-prediction comparison: logistic regression and random forest each make ten errors, sharing four, with anonymous source-row evidence",
+    "desc": "Compare which saved examples classifiers miss together or separately, with exact row evidence and clear evaluation limits.",
+    "built": "Extended the existing read-only results lab with paired error partitions and anonymous source-row evidence for all three classifiers and the training-majority baseline.",
+    "why": "Two approaches can have the same error total while missing different examples. Aggregate scores alone cannot show that overlap; the saved predictions make it inspectable.",
     "how": [
-      "Reproduce the existing fixed three-model evaluation with all 30 features and preprocessing inside training-only cross-validation.",
-      "Reconcile saved predictions with source rows, confusion matrices and scores; compute a majority baseline using training labels only.",
-      "Choose a saved classifier to explore its errors, malignant precision/recall/F1 and balanced accuracy; controls read results without retraining."
+      "Reproduce the fixed evaluation and reconcile saved predictions with source labels, exact partitions, confusion counts and scores; training and model settings remain unchanged.",
+      "Choose approaches A and B to partition the same 171 holdout rows into both wrong, only A wrong, only B wrong and both correct.",
+      "Inspect anonymous source positions, actual labels, both predictions and explicit false-positive/false-negative outcomes for any group; no control trains or tunes a model."
     ],
-    "demonstrates": "Reproducible machine learning, class-imbalance analysis, precise metric interpretation, data-integrity checks and accessible frontend development.",
+    "demonstrates": "Reproducible error analysis, independent reconciliation of paired observations, class-imbalance interpretation and accessible evidence exploration.",
     "caption": "Actual browser capture of the saved-results lab after desktop and mobile checks. The controls select previously computed outputs; they do not train a model.",
-    "result": "Saved predictions from the unchanged three-model evaluation reconcile with source labels and confusion counts. Logistic regression: 7 missed / 64, Decision tree: 10 missed / 64, Random forest: 6 missed / 64. The training-majority baseline scores 62.6% accuracy but misses 64 of 64 malignant-labelled holdout examples. The explorer reports positive-class precision/recall/F1 and balanced accuracy without retraining. This repeatedly reused holdout is exploratory, with no independent or clinical validation.",
+    "result": "Saved predictions from the unchanged three-model evaluation reconcile with source labels and confusion counts. Logistic regression: 7 missed / 64, Decision tree: 10 missed / 64, Random forest: 6 missed / 64. The training-majority baseline scores 62.6% accuracy but misses 64 of 64 malignant-labelled holdout examples. The explorer reports positive-class precision/recall/F1 and balanced accuracy without retraining. This repeatedly reused holdout is exploratory, with no independent or clinical validation. Logistic regression and random forest each make 10 and 10 saved errors respectively: 4 shared errors, 6 logistic-only errors and 6 forest-only errors. Paired counts describe these same rows; they are not a significance test or a new performance estimate.",
     "limits": "Educational analysis of a public teaching dataset, not a diagnostic system. This browser reads saved results only; it accepts no patient inputs and trains no models. The holdout has been reused across models and portfolio iterations, so it is exploratory rather than an untouched final test or an unbiased selection estimate. The baseline is context, not a new tuned classifier. No independent cohort, clinical validation, calibration study or causal feature interpretation is claimed.",
-    "technical": "A Python export independently reconciles source hashes, fixed partitions, saved prediction labels, confusion counts and metrics before generating the explorer JSON. A training-majority baseline uses 250 benign and 148 malignant training labels. Malignant precision is explicitly undefined when a model predicts no positives; F1 is zero when it misses every positive. The existing evaluation, training-only five-fold CV and figure generation remain unchanged. Browser tests check all four approaches at desktop/mobile widths, keyboard selection, exact rendered values and loading failure.",
+    "technical": "The Python exporter verifies source and prediction hashes, partition membership, labels and existing confusion/metric artifacts before exporting anonymous row positions and all sixteen ordered paired partitions. A training-majority baseline uses training labels alone. Independent pandas masks reconcile every partition, error marginal, row identity and swapped/self comparison. Browser tests reconcile every pair/group directly with the source prediction CSV at desktop/mobile widths, including outcome labels, empty states and keyboard selection. Existing training-only CV, split, models and evaluation code are unchanged.",
     "run": "Install requirements.txt, run python evaluate.py, python -m unittest discover -p \"test_*.py\" -v, python plot_portfolio.py and python build_explorer.py. Serve docs/ with a local static server. npm ci and npm run test:browser run repeatable desktop/mobile checks. The original notebook remains separate.",
     "extra": "",
     "gallery": [
       [
+        "paired-mobile.jpg",
+        "Native approach/group selectors and readable count cards on mobile; the evidence table scrolls within its labelled region."
+      ],
+      [
+        "explorer.jpg",
+        "Existing confusion counts and positive-class metrics remain available for each saved approach."
+      ],
+      [
         "baseline.jpg",
-        "A baseline chosen from training labels reaches 62.6% holdout accuracy while missing all 64 malignant-labelled examples."
-      ],
-      [
-        "comparison.png",
-        "Existing training-only CV and exploratory holdout results; fold SD is not a confidence interval."
-      ],
-      [
-        "confusion.png",
-        "All three original saved confusion matrices on the same 171 reused holdout examples."
+        "The baseline chosen only from training labels misses all 64 malignant-labelled holdout examples."
       ]
     ],
-    "challenge": "Accuracy rewards majority guessing on an imbalanced dataset. The useful challenge is to explain which examples were missed and what each denominator means, without turning a reused exploratory holdout into a model-selection claim. The exporter cross-checks independent saved artifacts and carries their hashes into a browser that cannot train, tune or accept patient inputs.",
+    "challenge": "Equal aggregate accuracy can conceal different mistakes. The paired explorer must compare the same rows in the same order, preserve the training-only baseline and distinguish wrong predictions by their actual labels. Source validation precedes partitioning, and every displayed group can be traced back to the saved CSV without exporting identifiers or feature measurements. Descriptive overlap is explicitly separated from significance testing or new unbiased performance claims.",
     "demo": "https://benjanning.github.io/pfda-Project2/"
   },
   "assets": [
@@ -81,9 +81,21 @@
     },
     {
       "name": "mobile-explorer.jpg",
-      "sha256": "3128c82072ba1d9249427bdaf85bd5768e9488e4488615c726b477f0b15773a9",
-      "bytes": 283047,
+      "sha256": "a5cbc06372edbace4b590f5b94a0d3e309fb28d2467939bcec5b5d6b529e3579",
+      "bytes": 381432,
       "provenance": "Genuine browser capture of the read-only results explorer after exact confusion-count/metric checks for all three saved models and the training-majority baseline. Uses exported source-validated predictions; no patient inputs, runtime training or clinical validation."
+    },
+    {
+      "name": "paired-errors.jpg",
+      "sha256": "d8b1f786fe589e30bc852a6e018ff48c497d9e910a1ba3b3e275114914bce52c",
+      "bytes": 123983,
+      "provenance": "Genuine browser capture after independently reconciling all sixteen approach pairs and four groups against saved holdout-predictions.csv at desktop and 390px widths. The unchanged default logistic-regression/random-forest comparison has 171 rows: four shared errors, six errors unique to each and 155 both correct. Anonymous zero-based source positions only; no runtime training or clinical service."
+    },
+    {
+      "name": "paired-mobile.jpg",
+      "sha256": "92c1b5dadc7a21e84fcbb4179dd78fb508465e392f2aafea0c9304a1ac51c9c1",
+      "bytes": 99669,
+      "provenance": "Genuine browser capture after independently reconciling all sixteen approach pairs and four groups against saved holdout-predictions.csv at desktop and 390px widths. The unchanged default logistic-regression/random-forest comparison has 171 rows: four shared errors, six errors unique to each and 155 both correct. Anonymous zero-based source positions only; no runtime training or clinical service."
     }
   ]
 }
