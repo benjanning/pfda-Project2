@@ -144,8 +144,79 @@
             this baseline because all malignant examples were missed.
           </p>
         </section>
+        <section class="paired" aria-labelledby="paired-title">
+          <p class="eyebrow">04 / SAME ROWS, DIFFERENT ERRORS</p>
+          <h2 id="paired-title">Do they miss the same examples?</h2>
+          <p>
+            Equal error totals can hide different mistakes. Compare two saved
+            approaches on the exact same 171 holdout rows. These descriptive
+            counts are not a significance test, a model ranking or a new
+            performance estimate.
+          </p>
+          <div class="pair-controls">
+            <div>
+              <label for="approach-a">Approach A</label
+              ><select
+                id="approach-a"
+                aria-describedby="paired-context"
+              ></select>
+            </div>
+            <div>
+              <label for="approach-b">Approach B</label
+              ><select
+                id="approach-b"
+                aria-describedby="paired-context"
+              ></select>
+            </div>
+          </div>
+          <p id="paired-context" class="fine"></p>
+          <div id="paired-counts" class="paired-counts"></div>
+          <p id="paired-status" role="status" aria-live="polite"></p>
+          <label for="error-group">Inspect source rows</label>
+          <select id="error-group">
+            <option value="both_wrong">Both wrong</option>
+            <option value="only_a_wrong">Only A wrong</option>
+            <option value="only_b_wrong">Only B wrong</option>
+            <option value="both_correct">Both correct</option>
+          </select>
+          <p class="fine">
+            Source indices are anonymous zero-based row positions in the
+            supplied CSV, not patient identifiers. Malignant is label 1; benign
+            is 0. A false negative predicts benign for an actual malignant
+            label; a false positive does the reverse. No features or patient
+            inputs are shown here.
+          </p>
+          <p class="fine">
+            On small screens, scroll the table horizontally to see both
+            predictions and outcomes.
+          </p>
+          <div
+            class="table-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Paired saved prediction evidence, scroll horizontally on small screens"
+          >
+            <table>
+              <caption id="paired-caption"></caption>
+              <thead>
+                <tr>
+                  <th scope="col">Source index</th>
+                  <th scope="col">Actual label</th>
+                  <th scope="col" id="prediction-a">Prediction A</th>
+                  <th scope="col">Outcome A</th>
+                  <th scope="col" id="prediction-b">Prediction B</th>
+                  <th scope="col">Outcome B</th>
+                </tr>
+              </thead>
+              <tbody id="paired-rows"></tbody>
+            </table>
+          </div>
+          <p id="paired-empty" hidden>
+            No source rows in this group for these two approaches.
+          </p>
+        </section>
         <section class="limits">
-          <p class="eyebrow">04 / EVIDENCE WITH CONTEXT</p>
+          <p class="eyebrow">05 / EVIDENCE WITH CONTEXT</p>
           <h2>Useful comparison. Limited conclusions.</h2>
           <p>
             All 30 features are retained. Seed 40 fixes the stratified split.

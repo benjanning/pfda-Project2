@@ -8,6 +8,16 @@ Compare three classifiers, inspect their mistakes and understand the limits of a
 
 [Explore saved results](https://benjanning.github.io/pfda-Project2/) · [Visual case study](https://benjanning.github.io/projects/projects/machine-learning/) · [Portfolio](https://benjanning.github.io/projects/)
 
+## Same score, different errors
+
+Logistic regression and random forest each make **10 errors** on the same 171 saved holdout rows. Only **4 errors are shared**; each has 6 errors the other avoids, and both are correct on 155 rows. These are descriptive overlaps on the reused holdout, not evidence of a superior model or a significance test.
+
+Choose two approaches, inspect their four error groups, and trace every shown row to its anonymous zero-based source position, actual label, both predictions and explicit false-negative/false-positive outcome. The training-majority baseline remains chosen from training labels only. Controls do not train, tune, accept patient inputs or make new predictions.
+
+![Genuine paired saved-error comparison](https://raw.githubusercontent.com/benjanning/pfda-Project2/portfolio-published/portfolio/export/assets/paired-errors.jpg)
+
+[Paired analysis and verification](PAIRED-ERRORS.md)
+
 ## Inspect the errors
 
 The read-only results lab shows genuine confusion counts, malignant-class precision, recall and F1, balanced accuracy and their denominators. Selecting a model reads saved outputs; it never trains or accepts patient inputs. It also compares a baseline chosen from the **training** majority (250 benign / 148 malignant labels). That always-benign guess reaches 62.6% accuracy while missing all 64 malignant-labelled holdout examples.
@@ -41,7 +51,7 @@ python -m http.server 8091 --bind 127.0.0.1 --directory docs
 
 The explorer uses generated `docs/data.json`; source UI lives in `web/`. For browser checks, run `npm ci`, install Chromium with `npx playwright install chromium`, then `npm run test:browser` (no separately running server needed).
 
-Regression tests check source/partition integrity, reconcile predictions with metrics and matrices, and reproduce result files byte-for-byte. Results are in [model-comparison.csv](results/model-comparison.csv), [holdout-predictions.csv](results/holdout-predictions.csv), [confusion-matrices.json](results/confusion-matrices.json) and [methodology.json](results/methodology.json). `plot_evaluation.py` remains a compatibility entry point for the current figure generator.
+Ten Python regression checks and five desktop/mobile browser workflows gate release. Independent source masks verify all sixteen approach pairs, their four disjoint groups and exact row order. Browser tests compare every displayed count, row and outcome directly with the saved CSV. Regression tests also check source/partition integrity, reconcile predictions with metrics and matrices, and reproduce result files byte-for-byte. Results are in [model-comparison.csv](results/model-comparison.csv), [holdout-predictions.csv](results/holdout-predictions.csv), [confusion-matrices.json](results/confusion-matrices.json) and [methodology.json](results/methodology.json). `plot_evaluation.py` remains a compatibility entry point for the current figure generator.
 
 Seed 40, 398 training examples, 171 held-out examples, five stratified training-only cross-validation folds. The chart's error bars show fold standard deviation, not confidence intervals. All three models are compared on the same split; the holdout has also been reused across portfolio iterations. It is exploratory, not an untouched final evaluation or an unbiased model-selection estimate. There is no independent cohort, clinical validation, calibration study or causal feature-importance claim.
 

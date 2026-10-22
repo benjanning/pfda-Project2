@@ -94,6 +94,87 @@ async function start() {
     $("selection-status").textContent =
       `${model.name}: ${fn} missed of ${tp + fn} actual malignant labels; ${fp} false positives of ${tn + fp} actual benign labels.`;
   }
+  const groupNames = {
+    both_wrong: "Both wrong",
+    only_a_wrong: "Only A wrong",
+    only_b_wrong: "Only B wrong",
+    both_correct: "Both correct",
+  };
+  for (const id of ["approach-a", "approach-b"])
+    for (const model of data.models) {
+      const option = document.createElement("option");
+      option.value = model.name;
+      option.textContent = model.name;
+      $(id).append(option);
+    }
+  $("approach-a").value = "Logistic regression";
+  $("approach-b").value = "Random forest";
+  const rowsByIndex = new Map(
+    data.observations.map((row) => [row.row_index, row]),
+  );
+  const className = (value) => (value === 1 ? "Malignant (1)" : "Benign (0)");
+  const outcome = (actual, prediction) =>
+    actual === prediction
+      ? "Correct"
+      : actual === 1
+        ? "False negative"
+        : "False positive";
+  function renderPair() {
+    const a = $("approach-a").value,
+      b = $("approach-b").value;
+    const pair = data.pairs.find((pair) => pair.a === a && pair.b === b);
+    const counts = Object.fromEntries(
+      Object.entries(pair.groups).map(([key, rows]) => [key, rows.length]),
+    );
+    $("paired-context").textContent =
+      `A: ${a}. B: ${b}. Each count uses the same ${data.holdout_rows} rows; the four groups form a complete partition.`;
+    $("paired-counts").replaceChildren(
+      ...Object.entries(groupNames).map(([key, title]) => {
+        const card = document.createElement("div");
+        card.dataset.group = key;
+        const heading = document.createElement("h3");
+        heading.textContent = title;
+        const count = document.createElement("strong");
+        count.textContent = counts[key];
+        const denominator = document.createElement("span");
+        denominator.textContent = `of ${data.holdout_rows} rows`;
+        card.append(heading, count, denominator);
+        return card;
+      }),
+    );
+    const group = $("error-group").value;
+    $("paired-status").textContent =
+      `A makes ${counts.both_wrong + counts.only_a_wrong} errors; B makes ${counts.both_wrong + counts.only_b_wrong}. ${counts.both_wrong} errors are shared. Showing ${counts[group]} rows: ${groupNames[group].toLowerCase()}.`;
+    $("prediction-a").textContent = `A: ${a}`;
+    $("prediction-b").textContent = `B: ${b}`;
+    $("paired-caption").textContent =
+      `${groupNames[group]} · ${counts[group]} of ${data.holdout_rows} saved rows, in original holdout order.`;
+    $("paired-empty").hidden = counts[group] > 0;
+    $("paired-rows").replaceChildren(
+      ...pair.groups[group].map((index) => {
+        const row = rowsByIndex.get(index),
+          tr = document.createElement("tr");
+        tr.dataset.sourceIndex = index;
+        [
+          index,
+          className(row.actual),
+          className(row.predictions[a]),
+          outcome(row.actual, row.predictions[a]),
+          className(row.predictions[b]),
+          outcome(row.actual, row.predictions[b]),
+        ].forEach((value, i) => {
+          const cell = document.createElement(i === 0 ? "th" : "td");
+          if (i === 0) cell.scope = "row";
+          cell.textContent = value;
+          tr.append(cell);
+        });
+        return tr;
+      }),
+    );
+  }
+  for (const id of ["approach-a", "approach-b", "error-group"])
+    $(id).addEventListener("change", renderPair);
+  renderPair();
   $("model").addEventListener("change", render);
   render();
   $("results").hidden = false;
